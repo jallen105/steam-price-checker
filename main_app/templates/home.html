@@ -1,0 +1,24 @@
+{% extends 'base.html' %} {% load static %} {% block head %}
+<link
+  rel="stylesheet"
+  href=""
+/>
+{% endblock %} {% block content %}
+
+<section class="logo-container">
+  <h1>Game Watchlist</h1>
+  <h3>Know when your listed games are on sale!</h3>
+</section>
+
+{% if not user.is_authenticated %}
+<section>
+  <form action="{% url 'home' %}" method="post" class="login">
+    <h1>Login</h1>
+    {% csrf_token %} {{ form.as_p }}
+    <input type="hidden" name="next" value="{{ next }}" />
+    <button type="submit" class="btn submit">Login</button>
+  </form>
+</section>
+{% endif %}
+
+{% endblock %}
