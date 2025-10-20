@@ -1,0 +1,18 @@
+{% extends 'base.html' %} 
+{% load static %} 
+{% block head %}
+<link rel="stylesheet" href="" />
+{% endblock %} 
+{% block content %}
+
+<div class='watchlist-head'>
+    <h2>{{ watchlist.name }}</h2>
+    <div>
+        <a href="{% url "watchlist-update" watchlist.id %}" class="btn warn">Edit Name</a>
+        <a href="{% url "watchlist-delete" watchlist.id %}" class="btn danger">Delete Watchlist</a>
+    </div>
+
+</div>
+
+</div>
+{% endblock %}

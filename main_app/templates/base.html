@@ -20,11 +20,12 @@
       <nav>
         <ul>
           {% if user.is_authenticated %}
-            <li>
-              <form id='logout-form' method='post' action="{% url "logout" %}">
-                {% csrf_token %}
-                <button type='submit' >Log out</button>
-              </form>
+                <li><a href="{% url 'watchlist-index' %}">All Watchlists</a></li>
+                <li><a href="{% url 'watchlist-create' %}">Add a Watchlist</a></li>
+                <form id='logout-form' method='post' action="{% url "logout" %}">
+                    {% csrf_token %}
+                    <button type='submit' >Log out</button>
+                </form>
             </li>
             {% else %}
             <li><a href="{% url 'home' %}">Login</a></li>

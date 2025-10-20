@@ -22,7 +22,7 @@ class Watchlist(models.Model):
         return self.name
     
     def get_absolute_url(self):
-        return reverse("wishlist-detail", kwargs={"wishlist_id": self.id})
+        return reverse("watchlist-detail", kwargs={"pk": self.id})
     
 class PriceCheck(models.Model):
     watchlist_id = models.ForeignKey(Watchlist, on_delete=models.CASCADE)
