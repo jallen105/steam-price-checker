@@ -13,7 +13,7 @@ class Game(models.Model):
     def __str__(self):
         return self.appid
 
-class Wishlist(models.Model):
+class Watchlist(models.Model):
     name = models.CharField(max_length=100)
     games = models.ManyToManyField(Game, through='PriceCheck')
     user = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -25,6 +25,6 @@ class Wishlist(models.Model):
         return reverse("wishlist-detail", kwargs={"wishlist_id": self.id})
     
 class PriceCheck(models.Model):
-    wishlist_id = models.ForeignKey(Wishlist, on_delete=models.CASCADE)
+    watchlist_id = models.ForeignKey(Watchlist, on_delete=models.CASCADE)
     game_id = models.ForeignKey(Game, on_delete=models.CASCADE)
     target_price = models.IntegerField()
