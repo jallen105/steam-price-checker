@@ -10,7 +10,7 @@
 </section>
 
 <section class="card-container">
-  {% for watchlist in watchlist_list %}
+  {% for watchlist in user_watchlists %}
     <div class="card">
       <div class="card-bg"></div>
       <a href="{% url 'watchlist-detail' watchlist.id %}">
