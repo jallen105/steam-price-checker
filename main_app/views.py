@@ -28,3 +28,25 @@ def signup(request):
 
 class Home(LoginView):
     template_name = 'home.html'
+
+class WatchlistCreate(LoginRequiredMixin, CreateView):
+    model = Watchlist
+    fields = ['name']
+
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+        return super().form_valid(form)
+    
+class WatchlistUpdate(LoginRequiredMixin, UpdateView):
+    model = Watchlist
+    fields = ['name']
+
+class WatchlistIndex(LoginRequiredMixin, ListView):
+    model = Watchlist
+
+class WatchlistDetail(LoginRequiredMixin, DetailView):
+    model = Watchlist
+
+class WatchlistDelete(LoginRequiredMixin, DeleteView):
+    model = Watchlist
+    success_url = '/watchlists/'
