@@ -9,6 +9,7 @@ psycopg2-binary = "*"
 httpx = "*"
 asgiref = "*"
 django-mathfilters = "*"
+schedule = "*"
 
 [dev-packages]
 

@@ -12,5 +12,6 @@ urlpatterns = [
     path('game-list/', views.game_list, name='game-list'),
     path('game-list/<int:game_id>/add-game/', views.add_game, name='add-game'),
     path('watchlists/<int:watchlist_id>/games/<int:game_id>/remove-game', views.remove_game, name='remove-game'),
-    path('watchlists/<int:watchlist_id>/games/<int:game_id>/target-price', views.update_target_price, name='update-target-price')
+    path('watchlists/<int:watchlist_id>/games/<int:game_id>/target-price', views.update_target_price, name='update-target-price'),
+    path('price-update/', views.check_prices, name='update-price')
 ]

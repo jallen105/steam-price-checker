@@ -33,6 +33,20 @@ def signup(request):
     context = {'form': form, 'error_message': error_message}
     return render(request, 'signup.html', context)
 
+async def game_list(request):
+    query = request.GET.get('query')
+    search_data = None
+    if query:
+        async with httpx.AsyncClient(timeout=5.0) as client:
+            try:
+                resp = await client.get(f'{STEAM_STORE_SEARCH}?term={query}&l=english&cc=NA')
+                resp.raise_for_status()
+                search_data = resp.json()
+            except httpx.HTTPError:
+                logger.exception('Async Steam lookup failed for %s', query)
+                search_data = {'error': 'Could not fetch search data at this time.'}
+    return await sync_render(request, 'game_list.html', {'search_data': search_data})
+
 class Home(LoginView):
     template_name = 'home.html'
 
@@ -95,35 +109,24 @@ def sync_redirect_add(game_data, template_name, watchlist_id):
 
     return redirect(template_name)
 
-async def game_list(request):
-    query = request.GET.get('query')
-    search_data = None
-    if query:
-        async with httpx.AsyncClient(timeout=5.0) as client:
-            try:
-                resp = await client.get(f'{STEAM_STORE_SEARCH}?term={query}&l=english&cc=NA')
-                resp.raise_for_status()
-                search_data = resp.json()
-            except httpx.HTTPError:
-                logger.exception('Async Steam lookup failed for %s', query)
-                search_data = {'error': 'Could not fetch search data at this time.'}
-    return await sync_render(request, 'game_list.html', {'search_data': search_data})
+async def fetch_game_data(game_id):
+    game_data = None
+    async with httpx.AsyncClient(timeout=5.0) as client:
+        try:
+            resp = await client.get(f'{STEAM_GET_APP_DETAIL}{game_id}')
+            resp.raise_for_status()
+            game_data = resp.json()
+        except httpx.HTTPError:
+            logger.exception('Async Steam lookup failed for %s', game_id)
+            game_data = {'error': 'Could not fetch game data at this time.'}
+    return game_data[f"{game_id}"]["data"]
 
 @login_required
 async def add_game(request, game_id):
     watchlist_id = request.POST.get('watchlist')
-    game_data = None
+    game_data = await fetch_game_data(game_id)
     if watchlist_id:
-        async with httpx.AsyncClient(timeout=5.0) as client:
-            try:
-                resp = await client.get(f'{STEAM_GET_APP_DETAIL}{game_id}')
-                resp.raise_for_status()
-                game_data = resp.json()
-            except httpx.HTTPError:
-                logger.exception('Async Steam lookup failed for %s', game_id)
-                game_data = {'error': 'Could not fetch game data at this time.'}
-    if watchlist_id:
-        return await sync_redirect_add(game_data[f"{game_id}"]["data"], 'game-list', watchlist_id)
+        return await sync_redirect_add(game_data, 'game-list', watchlist_id)
     else:
         return redirect('game-list')
 
@@ -140,3 +143,13 @@ def update_target_price(request, watchlist_id, game_id):
     update_price.save()
 
     return redirect('watchlist-detail', pk=watchlist_id)
+
+async def check_prices(request):
+    async for game in Game.objects.all():
+        game_data = await fetch_game_data(game.appid)
+        if game_data['is_free']:
+            continue
+        elif not game_data['price_overview']['final'] == game.price:
+            game.price = game_data['price_overview']['final']
+            game.save()
+    return redirect('home')
