@@ -15,7 +15,7 @@
 </div>
 
 <div class='game-list'>
-    {% for game in watchlist.games.all %}
+    {% for game in games %}
         <div class='card'>
             <div class='card-content'>
                 <h1>{{ game.name }}</h1>
@@ -25,6 +25,19 @@
                 {% else %}
                     <p>Free</p>
                 {% endif %}
+                {% for price in target_price %}
+                    {% if price.game_id == game.id %}
+                        <p style="color: {% if game.price|div:100 > price.target_price %} green {% else %} red {% endif %}">{{ price.target_price }}</p>
+                    {% endif %}
+                {% endfor %}  
+                
+                <form action="{% url "update-target-price" watchlist.id game.id %}" method='post'>
+                    {% csrf_token %}
+                    <label for="price" >Target Price: </label>
+                    <input type="text" name='price' id='price'>
+                    <button type='submit'>Update</button>
+                </form>
+
                 <form action="{% url "remove-game" watchlist.id game.id %}">
                     {% csrf_token %}
                     <button type='submit' class='btn'>Remove</button>

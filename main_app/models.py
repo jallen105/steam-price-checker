@@ -25,6 +25,6 @@ class Watchlist(models.Model):
         return reverse("watchlist-detail", kwargs={"pk": self.id})
     
 class PriceCheck(models.Model):
-    watchlist_id = models.ForeignKey(Watchlist, on_delete=models.CASCADE)
-    game_id = models.ForeignKey(Game, on_delete=models.CASCADE)
+    watchlist = models.ForeignKey(Watchlist, on_delete=models.CASCADE)
+    game = models.ForeignKey(Game, on_delete=models.CASCADE)
     target_price = models.IntegerField(default=0)

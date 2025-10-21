@@ -61,7 +61,8 @@ class WatchlistDetail(LoginRequiredMixin, DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['games'] = PriceCheck.objects.filter(watchlist_id=self.kwargs['pk'])
+        context['games'] = Watchlist.objects.get(id=self.kwargs['pk']).games.all
+        context['target_price'] = PriceCheck.objects.filter(watchlist_id=self.kwargs['pk'])
         return context
 
 class WatchlistDelete(LoginRequiredMixin, DeleteView):
@@ -129,4 +130,13 @@ async def add_game(request, game_id):
 @login_required
 def remove_game(request, watchlist_id, game_id):
     Watchlist.objects.get(id=watchlist_id).games.remove(game_id)
+    return redirect('watchlist-detail', pk=watchlist_id)
+
+@login_required
+def update_target_price(request, watchlist_id, game_id):
+    target_price = request.POST.get('price')
+    update_price = PriceCheck.objects.get(watchlist_id=watchlist_id, game_id=game_id)
+    update_price.target_price = target_price
+    update_price.save()
+
     return redirect('watchlist-detail', pk=watchlist_id)
