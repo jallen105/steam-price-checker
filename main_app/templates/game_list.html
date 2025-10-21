@@ -27,15 +27,15 @@
               <p>$ {{ game.price.final|div:100 }}</p>
             {% endif %}
             {% if user.is_authenticated %}
-            <form action="{% url "add-game" game.id %}" method='post' >
+            <form action="{% url "add-game" game.id %}" method='post' class='add-form' >
                 {% csrf_token %}
                 <select name="watchlist" id="watchlist" >
-                  <option value="">--Select a Watchlist--</option>
+                  <option hidden disabled selected value >--Select a Watchlist--</option>
                   {% for watchlist in watchlists %}
                     <option value="{{watchlist.id}}">{{watchlist.name}}</option>
                   {% endfor %}
                 </select>
-                <button type='submit' class='btn submit'>Add</button>
+                <button type='submit' class='btn submit' disabled>Add</button>
             </form>
             {% endif %}
         </li>
@@ -43,5 +43,18 @@
   </ul>
 
 {% endif %}
+
+<script type="text/javascript">
+  const forms = document.querySelectorAll('.add-form')
+  forms.forEach(form => {
+    const btn = form.children[2]
+    const select = form.children[1]
+    select.addEventListener('change', (e) => {
+      if (btn.hasAttribute('disabled')) {
+        btn.toggleAttribute('disabled', false)
+      }
+    })
+  })
+</script>
 
 {% endblock %}

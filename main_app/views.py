@@ -79,15 +79,19 @@ def sync_redirect_add(game_data, template_name, watchlist_id):
     game_appid = game_data['steam_appid']
     game_name = game_data['name']
     game_img = game_data['capsule_image']
+
     if not game_data['is_free']:
         game_price = game_data['price_overview']['final']
     else:
         game_price = 0
+
     if Game.objects.filter(appid=game_appid):
         game = Game.objects.get(appid=game_appid)
     else:
         game = Game.objects.create(appid = game_appid, name = game_name, thumb_nail = game_img, price = game_price)
+    
     Watchlist.objects.get(id=watchlist_id).games.add(game.id)
+
     return redirect(template_name)
 
 async def game_list(request):
@@ -117,7 +121,10 @@ async def add_game(request, game_id):
             except httpx.HTTPError:
                 logger.exception('Async Steam lookup failed for %s', game_id)
                 game_data = {'error': 'Could not fetch game data at this time.'}
-    return await sync_redirect_add(game_data[f"{game_id}"]["data"], 'game-list', watchlist_id)
+    if watchlist_id:
+        return await sync_redirect_add(game_data[f"{game_id}"]["data"], 'game-list', watchlist_id)
+    else:
+        return redirect('game-list')
 
 @login_required
 def remove_game(request, watchlist_id, game_id):
