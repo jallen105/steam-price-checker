@@ -11,7 +11,7 @@ class Game(models.Model):
     price = models.IntegerField()
 
     def __str__(self):
-        return self.appid
+        return self.name
 
 class Watchlist(models.Model):
     name = models.CharField(max_length=100)
@@ -27,4 +27,4 @@ class Watchlist(models.Model):
 class PriceCheck(models.Model):
     watchlist_id = models.ForeignKey(Watchlist, on_delete=models.CASCADE)
     game_id = models.ForeignKey(Game, on_delete=models.CASCADE)
-    target_price = models.IntegerField()
+    target_price = models.IntegerField(default=0)

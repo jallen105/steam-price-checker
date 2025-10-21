@@ -12,13 +12,32 @@
 {% if search_data %}
   <h2>Result</h2>
   <pre>{{ search_data|safe }}</pre>
+  <pre><br>{{ watchlists|safe }}</pre>
   <ul>
-    {% for game in search_data %}
+    {% for game in search_data.items %}
         <li>
             <img src="{{game.tiny_image}}" alt="{{game.name}} logo">
             <p>{{game.name}}</p>
-            <p>$ {{ game.price.initial|div:100 }}</p>
-            <p>$ {{ game.price.final|div:100 }}</p>
+            {% if not game.price %}
+              <p>Free</p>
+            {% elif game.price.final == game.price.initial %}
+              <p>$ {{ game.price.final|div:100 }}</p>
+            {% else %}
+              <p>$ {{ game.price.initial|div:100 }}</p>
+              <p>$ {{ game.price.final|div:100 }}</p>
+            {% endif %}
+            {% if user.is_authenticated %}
+            <form action="{% url "add-game" game.id %}" method='post' >
+                {% csrf_token %}
+                <select name="watchlist" id="watchlist" >
+                  <option value="">--Select a Watchlist--</option>
+                  {% for watchlist in watchlists %}
+                    <option value="{{watchlist.id}}">{{watchlist.name}}</option>
+                  {% endfor %}
+                </select>
+                <button type='submit' class='btn submit'>Add</button>
+            </form>
+            {% endif %}
         </li>
     {% endfor %}
   </ul>

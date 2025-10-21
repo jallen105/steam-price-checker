@@ -11,9 +11,12 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 
+from django.http import HttpResponse 
+
 logger = logging.getLogger(__name__)
 STEAM_SEARCH = 'https://steamcommunity.com/actions/SearchApps/'
 STEAM_STORE_SEARCH = 'https://store.steampowered.com/api/storesearch/'
+STEAM_GET_APP_DETAIL = 'https://store.steampowered.com/api/appdetails?appids='
 # Create your views here.
 
 def signup(request):
@@ -56,6 +59,11 @@ class WatchlistIndex(LoginRequiredMixin, ListView):
 class WatchlistDetail(LoginRequiredMixin, DetailView):
     model = Watchlist
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['games'] = PriceCheck.objects.filter(watchlist_id=self.kwargs['pk'])
+        return context
+
 class WatchlistDelete(LoginRequiredMixin, DeleteView):
     model = Watchlist
     success_url = '/watchlists/'
@@ -63,7 +71,21 @@ class WatchlistDelete(LoginRequiredMixin, DeleteView):
 @sync_to_async
 def sync_render(request, template_name, context):
     '''passes the async view into a sync view. This is to prevent the async to sync errors'''
+    context['watchlists'] = Watchlist.objects.filter(user = request.user)
     return render(request, template_name, context)
+
+@sync_to_async
+def sync_redirect_add(game_data, template_name, watchlist_id):
+    game_appid = game_data['steam_appid']
+    game_name = game_data['name']
+    game_img = game_data['capsule_image']
+    game_price = game_data['price_overview']['final']
+    if Game.objects.filter(appid=game_appid):
+        game = Game.objects.get(appid=game_appid)
+    else:
+        game = Game.objects.create(appid = game_appid, name = game_name, thumb_nail = game_img, price = game_price)
+    Watchlist.objects.get(id=watchlist_id).games.add(game.id)
+    return redirect(template_name)
 
 async def game_list(request):
     query = request.GET.get('query')
@@ -77,4 +99,18 @@ async def game_list(request):
             except httpx.HTTPError:
                 logger.exception('Async Steam lookup failed for %s', query)
                 search_data = {'error': 'Could not fetch search data at this time.'}
-    return await sync_render(request, 'game_list.html', {'search_data': search_data['items']})
+    return await sync_render(request, 'game_list.html', {'search_data': search_data})
+
+async def add_game(request, game_id):
+    watchlist_id = request.POST.get('watchlist')
+    game_data = None
+    if watchlist_id:
+        async with httpx.AsyncClient(timeout=5.0) as client:
+            try:
+                resp = await client.get(f'{STEAM_GET_APP_DETAIL}{game_id}')
+                resp.raise_for_status()
+                game_data = resp.json()
+            except httpx.HTTPError:
+                logger.exception('Async Steam lookup failed for %s', game_id)
+                game_data = {'error': 'Could not fetch game data at this time.'}
+    return await sync_redirect_add(game_data[f"{game_id}"]["data"], 'game-list', watchlist_id)

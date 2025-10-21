@@ -9,5 +9,6 @@ urlpatterns = [
     path('watchlists/create/', views.WatchlistCreate.as_view(), name='watchlist-create'),
     path('watchlists/<int:pk>/update/', views.WatchlistUpdate.as_view(), name='watchlist-update'),
     path('watchlists/<int:pk>/delete/', views.WatchlistDelete.as_view(), name='watchlist-delete'),
-    path('game-list/', views.game_list, name='game-list')
+    path('game-list/', views.game_list, name='game-list'),
+    path('game-list/<int:game_id>/add-game/', views.add_game, name='add-game')
 ]

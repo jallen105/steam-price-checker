@@ -1,5 +1,6 @@
 {% extends 'base.html' %} 
-{% load static %} 
+{% load static %}
+{% load mathfilters %} 
 {% block head %}
 <link rel="stylesheet" href="" />
 {% endblock %} 
@@ -11,7 +12,18 @@
         <a href="{% url "watchlist-update" watchlist.id %}" class="btn warn">Edit Name</a>
         <a href="{% url "watchlist-delete" watchlist.id %}" class="btn danger">Delete Watchlist</a>
     </div>
+</div>
 
+<div class='game-list'>
+    {% for game in watchlist.games.all %}
+        <div class='card'>
+            <div class='card-content'>
+                <h1>{{ game.name }}</h1>
+                <img src="{{ game.thumb_nail }}" alt="{{ game.name }} logo">
+                <p>$ {{ game.price|div:100 }}</p>
+            </div>
+        </div>
+    {% endfor %}
 </div>
 
 </div>
