@@ -13,7 +13,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 
 logger = logging.getLogger(__name__)
 STEAM_SEARCH = 'https://steamcommunity.com/actions/SearchApps/'
-
+STEAM_STORE_SEARCH = 'https://store.steampowered.com/api/storesearch/'
 # Create your views here.
 
 def signup(request):
@@ -71,10 +71,10 @@ async def game_list(request):
     if query:
         async with httpx.AsyncClient(timeout=5.0) as client:
             try:
-                resp = await client.get(f'{STEAM_SEARCH}{query}')
+                resp = await client.get(f'{STEAM_STORE_SEARCH}?term={query}&l=english&cc=NA')
                 resp.raise_for_status()
                 search_data = resp.json()
             except httpx.HTTPError:
                 logger.exception('Async Steam lookup failed for %s', query)
                 search_data = {'error': 'Could not fetch search data at this time.'}
-    return await sync_render(request, 'game_list.html', {'search_data': search_data})
+    return await sync_render(request, 'game_list.html', {'search_data': search_data['items']})

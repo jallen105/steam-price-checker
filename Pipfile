@@ -8,6 +8,7 @@ django = "*"
 psycopg2-binary = "*"
 httpx = "*"
 asgiref = "*"
+django-mathfilters = "*"
 
 [dev-packages]
 
