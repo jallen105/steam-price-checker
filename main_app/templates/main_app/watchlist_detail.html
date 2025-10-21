@@ -20,7 +20,15 @@
             <div class='card-content'>
                 <h1>{{ game.name }}</h1>
                 <img src="{{ game.thumb_nail }}" alt="{{ game.name }} logo">
-                <p>$ {{ game.price|div:100 }}</p>
+                {% if not game.price == 0 %}
+                    <p>$ {{ game.price|div:100 }}</p>
+                {% else %}
+                    <p>Free</p>
+                {% endif %}
+                <form action="{% url "remove-game" watchlist.id game.id %}">
+                    {% csrf_token %}
+                    <button type='submit' class='btn'>Remove</button>
+                </form>
             </div>
         </div>
     {% endfor %}
