@@ -20,7 +20,7 @@ form input, form select {
 
 .card {
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr 1fr;
+    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
     min-width: 100%;
     font-size: var(--font-reg);
     margin-bottom: 5px;

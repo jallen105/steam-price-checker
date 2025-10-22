@@ -2,14 +2,14 @@
 {% load static %}
 {% load mathfilters %} 
 {% block head %}
-<link rel="stylesheet" href="" />
+<link rel="stylesheet" href="{% static "css/watchlist/detail.css" %}" />
 {% endblock %} 
 {% block content %}
 
 <div class='watchlist-head'>
     <h1>{{ watchlist.name }}</h1>
     <div>
-        <a href="{% url "watchlist-update" watchlist.id %}" class="btn warn">Edit Name</a>
+        <a href="{% url "watchlist-update" watchlist.id %}" class="btn warn">Edit Watchlist Name</a>
         <a href="{% url "watchlist-delete" watchlist.id %}" class="btn danger">Delete Watchlist</a>
     </div>
 </div>
@@ -17,24 +17,34 @@
 <div class='game-list'>
     {% for game in games %}
         <div class='card'>
-            <div class='card-content'>
-                <h2>{{ game.name }}</h2>
+            <div class='card-img'>
                 <img src="{{ game.thumb_nail }}" alt="{{ game.name }} logo">
+            </div>
+            <div class='card-name'>
+                <p>{{ game.name }}</p>
+            </div>
+            <div class='card-price'>
                 {% if not game.price == 0 %}
                     <p>$ {{ game.price|div:100 }}</p>
                 {% else %}
                     <p>Free</p>
                 {% endif %}
+
                 {% for price in target_price %}
                     {% if price.game_id == game.id %}
-                        <p style="color: {% if game.price|div:100 > price.target_price %} green {% else %} red {% endif %}">{{ price.target_price }}</p>
+                        <p>{% if game.price|div:100 < price.target_price %} ✅ {% else %} 🟥 {% endif %}Target cost: $ {{ price.target_price }}</p>
                     {% endif %}
-                {% endfor %}  
-                
-                <form action="{% url "update-target-price" watchlist.id game.id %}" method='post'>
+                {% endfor %} 
+            </div>
+            
+            <div class='card-form'>
+                <form class='card-form' action="{% url "update-target-price" watchlist.id game.id %}" method='post'>
                     {% csrf_token %}
-                    <label for="price" >Target Price: </label>
-                    <input type="text" name='price' id='price'>
+                    <div>
+                        <label for="price" >Target Price: </label>
+                        <input type="text" name='price' id='price'>
+                    </div>
+                    
                     <button type='submit' class='btn'>Update</button>
                 </form>
 
@@ -42,7 +52,8 @@
                     {% csrf_token %}
                     <button type='submit' class='btn'>Remove</button>
                 </form>
-            </div>
+            </div>  
+                
         </div>
     {% endfor %}
 </div>
