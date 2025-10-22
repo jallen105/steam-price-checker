@@ -1,13 +1,13 @@
 {% extends 'base.html' %} {% load static %} {% block head %}
 <link
   rel="stylesheet"
-  href=""
+  href="{% static "css/home.css" %}"
 />
 {% endblock %} {% block content %}
 
 <section class="logo-container">
   <h1>Game Watchlist</h1>
-  <h3>Know when your listed games are on sale!</h3>
+  <p>Know when your watched games are on sale!</p>
 </section>
 
 {% if not user.is_authenticated %}

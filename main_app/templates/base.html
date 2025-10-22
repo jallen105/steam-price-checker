@@ -5,7 +5,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="">
+    <link rel="stylesheet" href="{% static "css/base.css" %}">
     <title>Game Watchlist</title>
     {% block head %}
     {% endblock %}
@@ -14,7 +14,7 @@
     <header>
       <div class="header-logo-container">
         <a href="/">
-            Game Watchlist
+            <h3>Game Watchlist</h3>
         </a>
       </div>
       <nav>
@@ -31,7 +31,7 @@
             </li>
           {% else %}
             <li><a href="{% url "game-list" %}">Game list</a></li>
-            <li><a href="{% url 'home' %}">Login</a></li>
+            <li><a href="{% url 'home' %}" id='login-link'>Login</a></li>
             <li><a href="{% url "signup" %}">Sign up</a></li>
           {% endif %}
         </ul>

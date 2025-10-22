@@ -10,12 +10,12 @@
 </form>
 
 {% if search_data %}
-  <h2>Result</h2>
+  <h2>Results</h2>
   <ul>
     {% for game in search_data.items %}
         <li>
             <img src="{{game.tiny_image}}" alt="{{game.name}} logo">
-            <p>{{game.name}}</p>
+            <h3>{{game.name}}</h3>
             {% if not game.price %}
               <p>Free</p>
             {% elif game.price.final == game.price.initial %}

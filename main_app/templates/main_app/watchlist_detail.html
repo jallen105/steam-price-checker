@@ -7,7 +7,7 @@
 {% block content %}
 
 <div class='watchlist-head'>
-    <h2>{{ watchlist.name }}</h2>
+    <h1>{{ watchlist.name }}</h1>
     <div>
         <a href="{% url "watchlist-update" watchlist.id %}" class="btn warn">Edit Name</a>
         <a href="{% url "watchlist-delete" watchlist.id %}" class="btn danger">Delete Watchlist</a>
@@ -18,7 +18,7 @@
     {% for game in games %}
         <div class='card'>
             <div class='card-content'>
-                <h1>{{ game.name }}</h1>
+                <h2>{{ game.name }}</h2>
                 <img src="{{ game.thumb_nail }}" alt="{{ game.name }} logo">
                 {% if not game.price == 0 %}
                     <p>$ {{ game.price|div:100 }}</p>
@@ -35,7 +35,7 @@
                     {% csrf_token %}
                     <label for="price" >Target Price: </label>
                     <input type="text" name='price' id='price'>
-                    <button type='submit'>Update</button>
+                    <button type='submit' class='btn'>Update</button>
                 </form>
 
                 <form action="{% url "remove-game" watchlist.id game.id %}">
