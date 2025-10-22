@@ -22,6 +22,8 @@ form input, form select {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
     min-width: 100%;
+    border: 1px solid black;
+    background-color: var(--cardbg);
     font-size: var(--font-reg);
     margin-bottom: 5px;
 }
