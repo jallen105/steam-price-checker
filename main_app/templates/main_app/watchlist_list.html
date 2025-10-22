@@ -1,7 +1,7 @@
 {% extends 'base.html' %} 
 {% load static %} 
 {% block head %}
-<link rel="stylesheet" href="" />
+<link rel="stylesheet" href="{% static "css/watchlist/index.css" %}" />
 {% endblock %} 
 {% block content %}
 
@@ -12,7 +12,6 @@
 <section class="card-container">
   {% for watchlist in user_watchlists %}
     <div class="card">
-      <div class="card-bg"></div>
       <a href="{% url 'watchlist-detail' watchlist.id %}">
         <div class="card-content">
           <h2>{{ watchlist.name }}</h2>

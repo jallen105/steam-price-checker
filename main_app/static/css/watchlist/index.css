@@ -1,0 +1,22 @@
+.card-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.card {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-width: 100rem;
+}
+
+.card a {
+    text-decoration: none;
+    color: var(--text-color);
+}
+
+.card a:hover {
+    color: var(--link-hover-color);
+}
