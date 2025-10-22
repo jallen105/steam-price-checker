@@ -1,21 +1,32 @@
 {% extends 'base.html' %}
+{% load static %}
 {% load mathfilters %}
+{% block head %}
+<link rel="stylesheet" href="{% static "css/game-list.css" %}" />
+{% endblock %} 
 {% block content %}
 
-<h1>Search Games</h1>
-<form action="{% url 'game-list' %}" method="GET">
-  <label for="query">Game search</label>
-  <input id="query" name="query" type="text" required />
-  <button type="submit">Search</button>
-</form>
+<div class='page-header'>
+  <h1>Search Games</h1>
+  <form action="{% url 'game-list' %}" method="GET">
+    <input id="query" name="query" type="text" required />
+    <button type="submit" class="btn">Search</button>
+  </form>
+</div>
+
 
 {% if search_data %}
-  <h2>Results</h2>
-  <ul>
-    {% for game in search_data.items %}
-        <li>
+  <div class='search-content'>
+    <h2>Results</h2>
+      {% for game in search_data.items %}
+        <div class='card'>
+          <div class='card-img'>
             <img src="{{game.tiny_image}}" alt="{{game.name}} logo">
-            <h3>{{game.name}}</h3>
+          </div>
+          <div class='card-name'>
+            <p>{{game.name}}</p>
+          </div>
+          <div class='card-price'>
             {% if not game.price %}
               <p>Free</p>
             {% elif game.price.final == game.price.initial %}
@@ -24,21 +35,24 @@
               <p>$ {{ game.price.initial|div:100 }}</p>
               <p>$ {{ game.price.final|div:100 }}</p>
             {% endif %}
-            {% if user.is_authenticated %}
-            <form action="{% url "add-game" game.id %}" method='post' class='add-form' >
-                {% csrf_token %}
-                <select name="watchlist" id="watchlist" >
-                  <option hidden disabled selected value >--Select a Watchlist--</option>
-                  {% for watchlist in watchlists %}
-                    <option value="{{watchlist.id}}">{{watchlist.name}}</option>
-                  {% endfor %}
-                </select>
-                <button type='submit' class='btn submit' disabled>Add</button>
-            </form>
-            {% endif %}
-        </li>
-    {% endfor %}
-  </ul>
+          </div>
+          
+          {% if user.is_authenticated %}
+          <form action="{% url "add-game" game.id %}" method='post' class='add-form card-form' >
+            {% csrf_token %}
+            <select name="watchlist" id="watchlist" >
+              <option hidden disabled selected value >--Select a Watchlist--</option>
+              {% for watchlist in watchlists %}
+                <option value="{{watchlist.id}}">{{watchlist.name}}</option>
+              {% endfor %}
+            </select>
+            <button type='submit' class='btn submit' disabled>Add</button>
+          </form>
+          {% endif %}
+        </div>
+      {% endfor %}
+  </div>
+  
 
 {% endif %}
 

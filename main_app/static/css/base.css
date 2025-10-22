@@ -102,7 +102,6 @@ nav li {
 
 .header-logo-container {
     margin: auto;
-    padding: 10px 20px 0;
     max-width: 500px;
 }
 
@@ -149,7 +148,6 @@ nav li {
 
 @media only screen and (min-width: 768px) {
   header {
-    position: sticky;
     display: flex;
     flex-direction: row;
     top: 0;
@@ -184,14 +182,6 @@ nav li {
   .page-header h1 {
     font-size: var(--font-xtreme);
   }
-
-  @supports (-webkit-backdrop-filter: none) or (backdrop-filter: none) {
-    header {
-      background: var(--nav-bg);
-      -webkit-backdrop-filter: blur(3px);
-      backdrop-filter: blur(3px);
-    }
-  }
 }
 
 @media only screen and (min-width: 1024px) {
@@ -211,17 +201,9 @@ nav li {
   nav,
   .header-logo-container {
     margin: 0;
-    border-radius: 18px;
   }
 
   nav {
     margin-left: auto;
-  }
-
-  @supports (-webkit-backdrop-filter: none) or (backdrop-filter: none) {
-    header {
-      -webkit-backdrop-filter: none;
-      backdrop-filter: none;
-    }
   }
 }
