@@ -11,8 +11,6 @@
 
 {% if search_data %}
   <h2>Result</h2>
-  <pre>{{ search_data|safe }}</pre>
-  <pre><br>{{ watchlists|safe }}</pre>
   <ul>
     {% for game in search_data.items %}
         <li>

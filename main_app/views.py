@@ -11,13 +11,9 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 
-from django.http import HttpResponse 
-
 logger = logging.getLogger(__name__)
-STEAM_SEARCH = 'https://steamcommunity.com/actions/SearchApps/'
 STEAM_STORE_SEARCH = 'https://store.steampowered.com/api/storesearch/'
 STEAM_GET_APP_DETAIL = 'https://store.steampowered.com/api/appdetails?appids='
-# Create your views here.
 
 def signup(request):
     error_message = ''
@@ -32,6 +28,13 @@ def signup(request):
     form = UserCreationForm()
     context = {'form': form, 'error_message': error_message}
     return render(request, 'signup.html', context)
+
+@sync_to_async
+def sync_render(request, template_name, context):
+    '''passes the async view into a sync view. This is to prevent the async to sync errors'''
+    if request.user.is_authenticated:
+        context['watchlists'] = Watchlist.objects.filter(user = request.user)
+    return render(request, template_name, context)
 
 async def game_list(request):
     query = request.GET.get('query')
@@ -82,12 +85,6 @@ class WatchlistDetail(LoginRequiredMixin, DetailView):
 class WatchlistDelete(LoginRequiredMixin, DeleteView):
     model = Watchlist
     success_url = '/watchlists/'
-
-@sync_to_async
-def sync_render(request, template_name, context):
-    '''passes the async view into a sync view. This is to prevent the async to sync errors'''
-    context['watchlists'] = Watchlist.objects.filter(user = request.user)
-    return render(request, template_name, context)
 
 @sync_to_async
 def sync_redirect_add(game_data, template_name, watchlist_id):
