@@ -113,7 +113,7 @@ async def fetch_game_data(game_id):
     game_data = None
     async with httpx.AsyncClient(timeout=5.0) as client:
         try:
-            resp = await client.get(f'{STEAM_GET_APP_DETAIL}{game_id}')
+            resp = await client.get(f'{STEAM_GET_APP_DETAIL}{game_id}&cc=NA')
             resp.raise_for_status()
             game_data = resp.json()
         except httpx.HTTPError:
@@ -144,12 +144,11 @@ def update_target_price(request, watchlist_id, game_id):
 
     return redirect('watchlist-detail', pk=watchlist_id)
 
-async def check_prices(request):
+async def check_prices():
     async for game in Game.objects.all():
         game_data = await fetch_game_data(game.appid)
         if game_data['is_free']:
             continue
         elif not game_data['price_overview']['final'] == game.price:
             game.price = game_data['price_overview']['final']
-            game.save()
-    return redirect('home')
+            await sync_to_async(game.save)()

@@ -10,6 +10,7 @@ httpx = "*"
 asgiref = "*"
 django-mathfilters = "*"
 schedule = "*"
+django-crontab = "*"
 
 [dev-packages]
 
