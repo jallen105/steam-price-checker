@@ -32,8 +32,8 @@
             {% elif game.price.final == game.price.initial %}
               <p>$ {{ game.price.final|div:100 }}</p>
             {% else %}
-              <p>$ {{ game.price.initial|div:100 }}</p>
-              <p>$ {{ game.price.final|div:100 }}</p>
+              <p class='original-price'>$ {{ game.price.initial|div:100 }}</p>
+              <p class='discount'>$ {{ game.price.final|div:100 }}</p>
             {% endif %}
           </div>
           

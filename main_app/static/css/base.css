@@ -23,18 +23,11 @@ body {
     color: #CCD8E3;
     --background: #2A475E;
     --cardbg: #1B2838;
-    --nav-bg: rgba(104, 197, 248, 0.7);
-    --nav-bg-ff: rgba(104, 197, 248, 0.9);
-    --borders: rgb(36, 116, 248) solid 2px;
+    --borders: black solid 2px;
     --text-color: #CCD8E3;
     --link-hover-color: white;
-    --button-bg: rgb(245, 245, 245);
-    --button-bg-hover: rgb(226, 226, 226);
-    --submit: rgb(26, 128, 0);
-    --warn: rgb(255, 102, 0);
-    --danger: rgb(220, 20, 30);
-    --secondary: rgb(57, 57, 57);
-    --card-box-shadow: 5px 5px 6px -1px #aaa;
+    --button-bg-hover: #CCD8E3;
+    --card-box-shadow: 5px 5px 6px -1px #322;
     --font-xtreme: 4.2rem;
     --font-xxl: 3.6rem;
     --font-xl: 2.4rem;
@@ -45,6 +38,7 @@ body {
 
 header {
     width: 100%;
+    background-color: var(--cardbg);
 }
 
 nav {
@@ -136,6 +130,7 @@ nav li {
   text-decoration: none;
   background-color: var(--cardbg);
   color: var(--text-color);
+  border-color: var(--text-color);
   font-weight: 600;
   cursor: pointer;
   font-family: inherit;
@@ -145,11 +140,7 @@ nav li {
 .btn:hover {
   background-color: var(--button-bg-hover);
   color: var(--cardbg);
-}
-
-.submit {
-  color: var(--submit);
-  border-color: var(--submit);
+  border-color: var(--cardbg);
 }
 
 @media only screen and (min-width: 768px) {
@@ -196,11 +187,10 @@ nav li {
   }
 
   header {
-    margin: 20px 20px 0 20px;
-    width: calc(100vw - 40px);
+    padding: 20px 20px 0 20px;
+    width: 100vw;
     max-width: 1920px;
     top: 20px;
-    background-color: transparent;
     border-bottom: none;
   }
 

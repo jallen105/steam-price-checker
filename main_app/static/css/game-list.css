@@ -34,10 +34,26 @@ form input, form select {
     align-items: center;
 }
 
-.card-name, .card-price {
+.card-name{
     display: flex;
     justify-content: flex-start;
     align-items: center;
+}
+
+.card-price {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+}
+
+.original-price {
+    text-decoration-line: line-through;
+    color: gray;
+}
+
+.discount {
+    color: forestgreen;
 }
 
 .card-price {
@@ -53,4 +69,9 @@ form input, form select {
 .card-form button:disabled {
     color: gray;
     border-color: gray;
+}
+
+.btn:disabled:hover {
+    background-color: var(--cardbg);
+    cursor: default;
 }

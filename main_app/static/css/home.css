@@ -38,6 +38,7 @@ main > section {
     justify-content: center;
     align-items: center;
     width: 80%;
+    background-color: var(--cardbg);
 }
 
 .login h1 {
